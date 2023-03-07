@@ -39,8 +39,13 @@ class ProductsView(View):
   def get(self,request):
     if request.user.is_authenticated:
       ombor_1=Ombor.objects.get(user=request.user)
+      soz=request.GET.get('qidirish')
+      if soz is None:
+        P_R=Mahsulot.objects.filter(ombor=ombor_1)
+      else:
+        P_R=Mahsulot.objects.filter(ombor=ombor_1,nom__contains=soz)
       data={
-        'mahsulotlar':Mahsulot.objects.filter(ombor=ombor_1)
+        'mahsulotlar':P_R
       }
       return render(request,'products.html',data)
     redirect('bulim')
@@ -78,6 +83,7 @@ class ProductUpdate(View):
       return render(request,'product_update.html',data)
     return redirect('mahsulot')
   
+  
   def post(self,request,pk):
     m1=Mahsulot.objects.filter(id=pk)
     m1.update(
@@ -93,8 +99,13 @@ class ClientView(View):
   def get(self,request):
     if request.user.is_authenticated:
       client1=Ombor.objects.get(user=request.user)
+      soz=request.GET.get('qidirish')
+      if soz is None:
+        c_q=Client.objects.filter(ombor=client1)
+      else:
+        c_q=Client.objects.filter(ombor=client1,nom__contains=soz)
       data={
-       "clinetlar":Client.objects.filter(ombor=client1)
+       "clinetlar":c_q
       }
       return render(request,'clients.html',data)
     return redirect('bulim')
